@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sea Animal Classification</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap");
+      body {
+        font-family: "Cal Sans", sans-serif;
+        text-align: center;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #a8dadc 0%, #457b9d 100%);
+        color: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      h1 {
+        color: #f1faee;
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .main-layout-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Sejajarkan di bagian atas */
+        gap: 40px; /* Jarak antara kolom */
+        flex-wrap: wrap; /* Izinkan wrapping untuk responsif */
+        max-width: 1200px; /* Lebar maksimal keseluruhan layout */
+        width: 100%;
+      }
+
+      .info-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        flex: 1; /* Ambil ruang yang tersedia */
+        min-width: 300px; /* Lebar minimum */
+        max-width: 450px; /* Lebar maksimum */
+        box-sizing: border-box;
+        text-align: left;
+        color: #1d3557;
+      }
+      .info-container h3 {
+        color: #2a9d8f;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      .info-container p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+      .info-container ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 8px;
+      }
+      .info-container li {
+        background-color: #e0f2f7;
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 0.95rem;
+        font-weight: bold;
+        color: #457b9d;
+        text-align: center;
+      }
+
+      .upload-and-results {
+        display: flex;
+        flex-direction: column; /* Ini akan menumpuk upload dan hasil */
+        gap: 30px; /* Jarak antara upload dan hasil prediksi */
+        flex: 1;
+        min-width: 300px;
+        max-width: 450px; /* Sesuaikan lebar kolom kedua */
+        box-sizing: border-box;
+      }
+
+      .upload-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      input[type="file"] {
+        padding: 12px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        border: 2px solid #a8dadc;
+        background-color: #f1faee;
+        color: #457b9d;
+        width: 100%;
+        max-width: 300px;
+        box-sizing: border-box;
+      }
+      input[type="file"]::file-selector-button {
+        background-color: #2a9d8f;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      input[type="file"]::file-selector-button:hover {
+        background-color: #264653;
+      }
+      button {
+        padding: 12px 25px;
+        font-size: 1.2rem;
+        border: none;
+        background-color: #2a9d8f;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      button:hover {
+        background-color: #264653;
+        transform: translateY(-2px);
+      }
+      form {
+        width: 100%;
+        max-width: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* Gaya untuk hasil prediksi */
+      .prediction-results {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        color: #1d3557;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .prediction-results h2 {
+        color: #1d3557;
+        font-size: 2rem;
+        margin-top: 0;
+        margin-bottom: 20px;
+        background-color: transparent;
+        padding: 0;
+        box-shadow: none;
+      }
+      .prediction-results img {
+        max-width: 100%; /* Agar gambar tidak melebihi lebar container */
+        height: auto; /* Jaga aspek rasio */
+        border-radius: 15px;
+        border: 5px solid #457b9d;
+        margin-top: 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .footer {
+        margin-top: 40px;
+        color: #f1faee;
+        font-size: 1rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Media Queries for Responsiveness */
+      @media (max-width: 900px) { /* Ubah breakpoint untuk transisi */
+        .main-layout-container {
+          flex-direction: column; /* Ubah ke kolom saat layar kecil */
+          align-items: center;
+          gap: 30px;
+        }
+        .info-container,
+        .upload-and-results {
+          max-width: 90%; /* Lebar lebih besar di layar kecil */
+          min-width: unset; /* Hapus min-width untuk fleksibilitas */
+          width: 100%; /* Pastikan mengambil lebar penuh di kolom */
+        }
+        h1 {
+          font-size: 2.5rem;
+        }
+        .info-container h3 {
+          font-size: 1.5rem;
+        }
+        .info-container p {
+          font-size: 1rem;
+        }
+        .info-container ul {
+          grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sea Animal Classification</h1>
+    <div class="main-layout-container">
+      <div class="info-container">
+        <h3>About This Predictor</h3>
+        <p>
+          This tool allows you to classify various sea animals from an uploaded
+          image. Our model is specifically trained to recognize the following categories:
+        </p>
+        <ul>
+          <li>Coral</li>
+          <li>Fish</li>
+          <li>Jelly Fish</li>
+          <li>Lobster</li>
+          <li>Penguin</li>
+          <li>Seal</li>
+          <li>Sharks</li>
+          <li>Squid</li>
+          <li>Turtle</li>
+        </ul>
+        <p>
+          Please ensure the image clearly shows one of the listed sea animals for the best prediction results.
+        </p>
+      </div>
+
+      <div class="upload-and-results">
+        <div class="upload-container">
+          <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required />
+            <button type="submit">Upload and Predict</button>
+          </form>
+        </div>
+
+        {% if prediction %}
+        <div class="prediction-results">
+          <h2>Prediction: {{ prediction }}</h2>
+          <img src="{{ image_path }}" alt="Uploaded Image" />
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer">
+      Fadhlan Akbar Rizal - Project Computer Vision
+    </div>
+  </body>
+</html>
